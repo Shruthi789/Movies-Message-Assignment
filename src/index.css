@@ -11,3 +11,47 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.heading {
+  color: green;
+  text-align:center;
+}
+/*Movie styles */
+.movies-arrangement{
+  display:flex;
+  gap: 20px;
+  flex-wrap:wrap;
+  justify-content: space-around;
+}
+.movie-spec{
+  display:flex;
+  justify-content: space-between;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.movie-poster{
+  width:400px;
+  height:400px;
+  object-fit: cover;
+}
+.movie-data{
+  width:400px;
+}
+.title{
+  font-weight: bold;
+}
+/*Button Style*/
+.button-style{
+  display:flex;
+  gap:10px;
+}
+/*Msg Style*/
+.msg-spec{
+  display:flex;
+  align-items: center;
+  gap:10px;
+  justify-content: center;
+}
+.msg-arrangement{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap:wrap;
+}
