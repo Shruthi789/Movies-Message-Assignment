@@ -68,6 +68,10 @@ code {
 .label-style::first-letter{
   text-transform: uppercase;
 }
+.label-style::after{
+ content: '*';
+ color:red;
+}
 .form-component{
   display: flex;
   gap:10px;

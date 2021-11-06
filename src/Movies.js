@@ -47,7 +47,7 @@ function Movies({ name, poster, summary, rating, cast }) {
   function FormInput({labelname,changeFn}){
     return(<div className="form-component">
       <label className="label-style">{labelname}:</label>
-      <input type="text" name={labelname} onChange={changeFn}></input>
+      <input type="text" name={labelname} onChange={changeFn} required></input>
       </div>);
   }
  /*Movies Form and Components Display */
