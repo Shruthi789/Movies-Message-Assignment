@@ -34,24 +34,42 @@ code {
 }
 .movie-data{
   width:400px;
+  padding: 4px;
+  background-color:palevioletred;
 }
-.title{
-  font-weight: bold;
+.movie-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 /*Button Style*/
+.like-button-style{
+  display:flex;
+  gap:10px;
+}
 .button-style{
-  display:flex;
-  gap:10px;
+  background-color: green;
+  color: white;
+  cursor: pointer;
 }
-/*Msg Style*/
-.msg-spec{
-  display:flex;
-  align-items: center;
-  gap:10px;
-  justify-content: center;
+.button-style:hover{
+ background-color: gray;
+ color: black;
 }
-.msg-arrangement{
+/*Form*/
+.form-style{
   display: flex;
   justify-content: space-around;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
+}
+.label-style{
+  font-weight: bold;
+}
+.label-style::first-letter{
+  text-transform: uppercase;
+}
+.form-component{
+  display: flex;
+  gap:10px;
+  padding: 4px;
 }
