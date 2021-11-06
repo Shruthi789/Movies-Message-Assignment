@@ -1,36 +1,38 @@
 import { useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import './App.css';
 /*Movies Component*/
 function Movies({ name, poster, summary, rating, cast }) {
-    const [showSummary,setSummary]=useState(false);
-    const [showCast,setCast]=useState(false);
-    return (
-      <div className="movie-data">
-        <img src={poster} className="movie-poster" alt="MovieImage" /> <br />
-        <div className="movie-spec">
-          <h4 className="movie-name">{name}</h4>
-          <h4 className="movie-rating">⭐ {rating} </h4>
-        </div>
-        <div className="movie-info">
-        <button className="button-style" onClick={()=>{setSummary(!showSummary)}}>{showSummary?"Hide":"Show"} Summary</button>
-        {showSummary?<p className="movie-summary">{summary} </p>:""}<br/>
-        <button className="button-style"onClick={()=>{setCast(!showCast)}}>{showCast?"Hide":"Show"} Cast</button>
-        {showCast?<p className="movie-cast"> {cast} </p>:""}
-        </div>
-        <br/>
-        <Counter />
+  const [showSummary,setSummary]=useState(false);
+  const [showCast,setCast]=useState(false);
+  return (
+    <div className="movie-data">
+      <img src={poster} className="movie-poster" alt="MovieImage" /> <br />
+      <div className="movie-spec">
+        <h4 className="movie-name">{name}</h4>
+        <h4 className="movie-rating">⭐ {rating} </h4>
       </div>
-    );
-  }
-  /*Counter Component*/
-  function Counter() {
-    const [like, setLike] = useState(0);
-    const [dislike, setdisLike] = useState(0);
-    return (<div className="like-button-style">
-      <button onClick={() => setLike(like + 1)}>👍 {like}</button>
-      <button onClick={() => setdisLike(dislike + 1)}>👎 {dislike}</button>
-    </div>)
-  }
+      <div className="movie-info">
+      <Button variant="contained" className="button-style" onClick={()=>{setSummary(!showSummary)}}>{showSummary?"Hide":"Show"} Summary</Button>
+      {showSummary?<p className="movie-summary">{summary} </p>:""}<br/>
+      <Button variant="contained" className="button-style" onClick={()=>{setCast(!showCast)}}>{showCast?"Hide":"Show"} Cast</Button>
+      {showCast?<p className="movie-cast"> {cast} </p>:""}
+      </div>
+      <br/>
+      <Counter />
+    </div>
+  );
+}
+/*Counter Component*/
+function Counter() {
+  const [like, setLike] = useState(0);
+  const [dislike, setdisLike] = useState(0);
+  return (<div className="like-button-style">
+    <Button variant="text" onClick={() => setLike(like + 1)}>👍 {like}</Button>
+    <Button variant="text" onClick={() => setdisLike(dislike + 1)}>👎 {dislike}</Button>
+  </div>)
+}
   /*Displaying the Movie components */
   function MoviesList({list}) {
     return (<div className="movies-arrangement">
@@ -44,15 +46,15 @@ function Movies({ name, poster, summary, rating, cast }) {
     </div>);
   } 
   /*Input Component*/
-  function FormInput({labelname,changeFn}){
+  function FormInput({labelname,changeFn,value}){
     return(<div className="form-component">
       <label className="label-style">{labelname}:</label>
-      <input type="text" name={labelname} onChange={changeFn} required></input>
+      <TextField id="outlined-required" label={labelname} name={labelname} onChange={changeFn} value={value[labelname]} required></TextField>
       </div>);
   }
  /*Movies Form and Components Display */
   function MoviesForm(){
-    const [movie,addMovieInfo]=useState({});
+    const [movie,addMovieInfo]=useState({name:"",poster:"",summary:"",rating:"",cast:""});
     const [movies,addMovie]=useState([{
       name: "Interstellar",
       poster:
@@ -111,13 +113,11 @@ function Movies({ name, poster, summary, rating, cast }) {
     }]);
     const labels=["name","poster","summary","rating","cast"];
     const inputChange=(event)=>{addMovieInfo({...movie,[event.target.name]:event.target.value})};
+    const submitHandler=(event)=>{event.preventDefault();addMovie([...movies,movie]); addMovieInfo({name:"",poster:"",summary:"",rating:"",cast:""});};
     return (<div>
-      <form className="form-style" onSubmit={(event)=>{event.preventDefault();addMovie([...movies,movie]);}}>
-        {labels.map((value,index)=><FormInput key={index} labelname={value} changeFn={inputChange}/>)}
-       <div className="form-component">
-        <button className="button-style" type="Submit">+Add Movie</button>
-        <input className="button-style" type="reset"></input>
-        </div>
+      <form className="form-style" onSubmit={submitHandler}>
+        {labels.map((value,index)=><FormInput key={index} labelname={value} changeFn={inputChange} value={movie}/>)}
+        <Button variant="contained" className="button-style" type="Submit">+Add Movie</Button>
       </form><br/>
       <MoviesList list={movies}/>
       

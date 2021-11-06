@@ -45,7 +45,7 @@ code {
 /*Button Style*/
 .like-button-style{
   display:flex;
-  gap:10px;
+  gap:5px;
 }
 .button-style{
   background-color: green;
@@ -59,7 +59,7 @@ code {
 /*Form*/
 .form-style{
   display: flex;
-  justify-content: space-around;
+  justify-content:space-around;
   flex-wrap: wrap;
 }
 .label-style{
@@ -76,4 +76,5 @@ code {
   display: flex;
   gap:10px;
   padding: 4px;
+  align-items: center;
 }
