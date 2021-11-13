@@ -11,6 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/*NavBar styles */
+.navBar{
+  display:flex;
+  list-style-type:none;
+  justify-content: space-around;
+  flex-wrap:wrap;
+  background-color: yellow;
+}
 .heading {
   color: green;
   text-align:center;
@@ -33,8 +41,6 @@ code {
   object-fit: cover;
 }
 .movie-data{
-  width:400px;
-  padding: 4px;
   background-color:palevioletred;
 }
 .movie-info{
@@ -42,10 +48,13 @@ code {
   flex-direction: column;
   justify-content: space-between;
 }
+.title{
+  font-weight: bold;
+}
 /*Button Style*/
 .like-button-style{
   display:flex;
-  gap:5px;
+  gap:10px;
 }
 .button-style{
   background-color: green;
@@ -56,11 +65,17 @@ code {
  background-color: gray;
  color: black;
 }
+.card-actions{
+  display: flex;
+  justify-content: space-around;
+}
 /*Form*/
 .form-style{
   display: flex;
   justify-content:space-around;
   flex-wrap: wrap;
+  flex-direction: column;
+  width: 400px;
 }
 .label-style{
   font-weight: bold;
@@ -77,4 +92,5 @@ code {
   gap:10px;
   padding: 4px;
   align-items: center;
+  justify-content: space-evenly;
 }
