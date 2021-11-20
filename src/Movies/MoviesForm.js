@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {labels} from './Movies.js';
+import {useHistory} from 'react-router-dom';
 
 /*Input Component*/
 function FormInput({labelname,changeFn,value}){
@@ -10,18 +10,17 @@ function FormInput({labelname,changeFn,value}){
       <TextField id="outlined-required" label={labelname} name={labelname} onChange={changeFn} value={value[labelname]} required></TextField>
       </div>);
   }
- /*Movies Form and Components Display */
-  function MoviesForm({list}){
+ /*Add Movies Form */
+  function MoviesForm({movies,setMovies,labels}){
     const [movie,addMovieInfo]=useState({name:"",poster:"",summary:"",rating:"",cast:"",trailer:""});
-    const [message,addMessage]=useState("");
+    const history=useHistory();
     const inputChange=(event)=>{addMovieInfo({...movie,[event.target.name]:event.target.value})};
-    const submitHandler=(event)=>{event.preventDefault();list.push(movie); addMovieInfo({name:"",poster:"",summary:"",rating:"",cast:"",trailer:""}); addMessage("Movie added!!");};
+    const submitHandler=(event)=>{event.preventDefault();const newList=[...movies,movie];setMovies(newList); history.push('/movies');};
     return (<div>
       <form className="form-style" onSubmit={submitHandler}>
         {labels.map((value,index)=><FormInput key={index} labelname={value} changeFn={inputChange} value={movie}/>)}
         <Button variant="contained" className="button-style" type="Submit">+Add Movie</Button>
       </form><br/>
-      {message}
     </div>);
   } 
   

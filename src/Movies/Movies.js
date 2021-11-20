@@ -1,4 +1,4 @@
-let Initial_Movies=[{
+const Initial_Movies=[{
     name: "Interstellar",
     poster:
       "https://thefilmstage.com/wp-content/uploads/2014/09/interstellar_poster.jpg",
@@ -59,6 +59,6 @@ let Initial_Movies=[{
     cast:"Aishwarya Rajesh,Sathyaraj,Darshan,Sivakarthikeyan",
     trailer:"https://www.youtube.com/embed/_6_8uzD3EYM"
   }];
-  const labels=["name","poster","summary","rating","cast","trailer"];
+  
 
-  export {Initial_Movies,labels};
+  export {Initial_Movies};

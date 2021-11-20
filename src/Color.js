@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import {BackButton} from "./BackButton.js";
 function AddColor(){
     const [color,setColor]=useState("");
     const styles={backgroundColor:color};
@@ -11,6 +12,7 @@ function AddColor(){
       <button onClick={()=>{setColors([...colors,color])}}>Add Color</button>
       {colors.map((clr,index)=>(<ColorBox key={index} clr={clr}/>))}
       </div>
+      <BackButton />
       </div>
     );
   }

@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(202, 132, 144);
 }
 
 code {
@@ -14,10 +15,9 @@ code {
 /*NavBar styles */
 .navBar{
   display:flex;
-  list-style-type:none;
   justify-content: space-around;
   flex-wrap:wrap;
-  background-color: yellow;
+  width:100%;
 }
 .heading {
   color: green;
@@ -57,14 +57,13 @@ code {
   gap:10px;
 }
 .button-style{
-  background-color: green;
   color: white;
   cursor: pointer;
 }
 .button-style:hover{
  background-color: gray;
  color: black;
-}
+} 
 .card-actions{
   display: flex;
   justify-content: space-around;

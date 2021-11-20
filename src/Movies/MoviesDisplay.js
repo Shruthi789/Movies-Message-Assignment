@@ -11,11 +11,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { useHistory } from 'react-router';
-import './App.css';
+//import '../App.css';
 /*Movies Component*/
-function Movies({ name, poster, summary, rating, cast,id }) {
+function Movies({ name, poster, summary, rating, cast,editButton,deleteButton,trailerButton }) {
   const [showDetails,setDetails]=useState(false);
-  const history=useHistory();
   return (
     <Card sx={{ maxWidth: 445 }}>
       <CardMedia
@@ -26,7 +25,7 @@ function Movies({ name, poster, summary, rating, cast,id }) {
       />
      <CardContent>
       <div className="movie-spec">
-        <h4 className="movie-name">{name}  <IconButton aria-label="expandIcon" size="small" color="primary" onClick={() => setDetails(!showDetails)}>{showDetails?<ExpandLessIcon/>:<ExpandMoreIcon/>}</IconButton> <IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${id}`)}}><InfoIcon/></IconButton></h4>
+        <h4 className="movie-name">{name}  <IconButton aria-label="expandIcon" size="small" color="primary" onClick={() => setDetails(!showDetails)}>{showDetails?<ExpandLessIcon/>:<ExpandMoreIcon/>}</IconButton> </h4> {trailerButton}
         <h4 className="movie-rating">⭐ {rating} </h4>
       </div>
       <div className="movie-info">
@@ -40,7 +39,8 @@ function Movies({ name, poster, summary, rating, cast,id }) {
       </CardContent>
       <CardActions className="card-actions">
       <Counter />
-      <EditandDelete id={id}/>
+      {editButton}
+      {deleteButton}
       </CardActions>
     </Card>
   );
@@ -54,28 +54,23 @@ function Counter() {
     <IconButton aria-label="dislikes" size="small" color="primary" onClick={() => setdisLike(dislike + 1)}><Badge badgeContent={dislike} color="error">👎</Badge></IconButton> </div>
   );
 }
-/*Counter Component*/
-function EditandDelete({id}) {
-  const editHistory=useHistory();
-  const deleteHistory=useHistory();
-  return (<div className="like-button-style">
-    <IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {editHistory.push(`/movies/edit/${id}`)}}><EditIcon/></IconButton>
-    <IconButton aria-label="deleteIcon" size="small" color="primary" onClick={() => {deleteHistory.push(`/movies/delete/${id}`)}}><DeleteIcon/></IconButton> </div>
-  );
-}
+
   /*Displaying the Movie components */
-  function MoviesList({list}) {
+  function MoviesList({movies,setMovies}) {
+    const editHistory=useHistory();
+    const history=useHistory();
+    const deleteAction=(rIndex)=>{const newArray=movies.filter((mv,index)=>index!==rIndex); setMovies(newArray);};
     return (
     <div>
     <h1 className="heading">Movie List</h1>
     <div className="movies-arrangement">
-      {list.map(({
+      {movies.map(({
         name,
         poster,
         summary,
         rating,
         cast
-      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} cast={cast} id={index} />)}
+      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(index)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {editHistory.push(`/movies/edit/${index}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${index}`)}}><InfoIcon/></IconButton>}/>)}
     </div>
     </div>);
   } 
