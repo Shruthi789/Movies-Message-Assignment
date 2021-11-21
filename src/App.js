@@ -1,7 +1,7 @@
 // import logo from './logo.svg';
 import {MoviesList} from './Movies/MoviesDisplay.js';
 import {WrongURL} from './WrongURL.js';
-import {Initial_Movies} from './Movies/Movies.js';
+//import {Initial_Movies} from './Movies/Movies.js';
 import {MoviesForm} from './Movies/MoviesForm.js';
 import {AddColor} from './Color.js';
 import {MovieTrailer} from './Movies/MovieTrailer.js';
@@ -17,10 +17,10 @@ import { IconButton } from '@mui/material';
 import Brightness5Icon from '@mui/icons-material/Brightness5';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
 
 function App() {
-  const [movies, setMovies]=useState(Initial_Movies);
   const [mode,setMode]=useState('light');
   const labels=["name","poster","summary","rating","cast","trailer"];
   const history=useHistory();
@@ -30,8 +30,12 @@ function App() {
     },
   });
   const brightnessChange=()=>{const value=mode==='light'?'dark':'light'; setMode(value);};
+  const paperStyle={borderRadius:"0px",
+    height:"100vh"};
+  
   return (
     <ThemeProvider theme={theme}>
+    <Paper elevation={4} style={paperStyle}>
     <div>
        <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -54,11 +58,11 @@ function App() {
          <br/>
          <h1 className="heading">Welcome to the Movies Dashboard!</h1>
         </Route>
-        <Route exact path="/movies"><MoviesList movies={movies} setMovies={setMovies}/></Route>
+        <Route exact path="/movies"><MoviesList/></Route>
         <Route exact path="/films">
           <Redirect to="/movies"/>
         </Route>
-       <Route path="/movies/add"><MoviesForm movies={movies} setMovies={setMovies} labels={labels}/></Route>
+       <Route path="/movies/add"><MoviesForm labels={labels}/></Route>
        <Route exact path="/films/add">
           <Redirect to="/movies/add"/>
         </Route>
@@ -66,16 +70,17 @@ function App() {
        <AddColor/>
         </Route>
         <Route path="/movie-trailers/:id">
-       <MovieTrailer list={movies}/>
+       <MovieTrailer/>
         </Route>
         <Route path="/movies/edit/:id">
-       <EditMovie movies={movies} setMovies={setMovies} labels={labels}/>
+       <EditMovie labels={labels}/>
         </Route>
         <Route path="**">
        <WrongURL/>
         </Route>
        </Switch>
     </div>
+    </Paper>
     </ThemeProvider>
   );
 }

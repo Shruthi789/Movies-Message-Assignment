@@ -11,11 +11,20 @@ function FormInput({labelname,changeFn,value}){
       </div>);
   }
  /*Add Movies Form */
-  function MoviesForm({movies,setMovies,labels}){
+  function MoviesForm({labels}){
     const [movie,addMovieInfo]=useState({name:"",poster:"",summary:"",rating:"",cast:"",trailer:""});
     const history=useHistory();
     const inputChange=(event)=>{addMovieInfo({...movie,[event.target.name]:event.target.value})};
-    const submitHandler=(event)=>{event.preventDefault();const newList=[...movies,movie];setMovies(newList); history.push('/movies');};
+    const submitHandler=(event)=>{event.preventDefault();
+      fetch('https://61988dae164fa60017c230ed.mockapi.io/movies',{
+      method:'POST',
+      headers:{
+        'Content-type':'application/json'
+      },
+      body:JSON.stringify(movie)
+    })
+    .then(()=>history.push('/movies'))
+    .catch((error)=>console.log(error));}
     return (<div>
       <form className="form-style" onSubmit={submitHandler}>
         {labels.map((value,index)=><FormInput key={index} labelname={value} changeFn={inputChange} value={movie}/>)}

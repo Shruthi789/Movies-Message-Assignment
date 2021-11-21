@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -56,10 +56,22 @@ function Counter() {
 }
 
   /*Displaying the Movie components */
-  function MoviesList({movies,setMovies}) {
+  function MoviesList() {
+    const [movies, setMovies]=useState([]);
     const editHistory=useHistory();
     const history=useHistory();
-    const deleteAction=(rIndex)=>{const newArray=movies.filter((mv,index)=>index!==rIndex); setMovies(newArray);};
+    const getMovieData=()=>{
+      fetch('https://61988dae164fa60017c230ed.mockapi.io/movies')
+      .then((res)=>res.json())
+      .then((data)=>setMovies(data))
+      .catch((error)=>console.log(error));
+   };
+    useEffect(getMovieData,[]);
+    const deleteAction=(id)=>{
+    fetch(`https://61988dae164fa60017c230ed.mockapi.io/movies/${id}`,{method:'DELETE'})
+    .then(()=>getMovieData())
+    .catch((error)=>console.log(error));
+    };
     return (
     <div>
     <h1 className="heading">Movie List</h1>
@@ -69,8 +81,9 @@ function Counter() {
         poster,
         summary,
         rating,
-        cast
-      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(index)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {editHistory.push(`/movies/edit/${index}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${index}`)}}><InfoIcon/></IconButton>}/>)}
+        cast,
+        id
+      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {editHistory.push(`/movies/edit/${id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${id}`)}}><InfoIcon/></IconButton>}/>)}
     </div>
     </div>);
   } 
