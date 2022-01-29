@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState,useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -11,12 +11,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { useHistory } from 'react-router';
+import {moviesContext} from '../App.js';
+import {FilterForm} from './Form.js';
+import {API} from './APIInfo.js'
 //import '../App.css';
 /*Movies Component*/
-function Movies({ name, poster, summary, rating, cast,editButton,deleteButton,trailerButton }) {
+function Movies({ name, poster, summary, rating, cast,language,editButton,deleteButton,trailerButton }) {
   const [showDetails,setDetails]=useState(false);
   return (
-    <Card sx={{ maxWidth: 445 }}>
+    <Card sx={{ minWidth:340}}>
       <CardMedia
         component="img"
         image={poster}
@@ -32,7 +35,9 @@ function Movies({ name, poster, summary, rating, cast,editButton,deleteButton,tr
       {showDetails?<p className="movie-details"><span className="title">Summary:</span>
                 {summary} <br/><br/>
                 <span className="title">Cast:</span>
-                {cast}
+                {cast} <br/><br/>
+                <span className="title">Language:</span>
+                {language}
                 </p>:""}
      
       </div>
@@ -57,24 +62,30 @@ function Counter() {
 
   /*Displaying the Movie components */
   function MoviesList() {
-    const [movies, setMovies]=useState([]);
-    const editHistory=useHistory();
     const history=useHistory();
-    const getMovieData=()=>{
-      fetch('https://61988dae164fa60017c230ed.mockapi.io/movies')
-      .then((res)=>res.json())
-      .then((data)=>setMovies(data))
-      .catch((error)=>console.log(error));
-   };
-    useEffect(getMovieData,[]);
+    const {movies,getMovies}=useContext(moviesContext);
     const deleteAction=(id)=>{
-    fetch(`https://61988dae164fa60017c230ed.mockapi.io/movies/${id}`,{method:'DELETE'})
-    .then(()=>getMovieData())
+    fetch(`${API}/movies/${id}`,{method:'DELETE'})
+    .then(()=>getMovies())
     .catch((error)=>console.log(error));
+    };
+    const submitHandler=(values)=>{
+       const {language,rating}=values;
+      fetch(`${API}/movies?language=${language}&rating=${rating}`,{
+        method:'GET',
+        headers:{
+       'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA'
+    }})
+          .then((res)=>res.json())
+         .then((values)=>console.log(values))
+         .catch((error)=>console.log(error));
     };
     return (
     <div>
+    {movies.length!==0?
+    <div>
     <h1 className="heading">Movie List</h1>
+    <FilterForm submitHandler={submitHandler}/>
     <div className="movies-arrangement">
       {movies.map(({
         name,
@@ -82,9 +93,11 @@ function Counter() {
         summary,
         rating,
         cast,
-        id
-      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {editHistory.push(`/movies/edit/${id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${id}`)}}><InfoIcon/></IconButton>}/>)}
+        language,
+        _id
+      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} language={language} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(_id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {history.push(`/movies/edit/${_id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${_id}`)}}><InfoIcon/></IconButton>}/>)}
     </div>
+    </div>:<h2>Loading...</h2>}
     </div>);
   } 
   export {MoviesList};

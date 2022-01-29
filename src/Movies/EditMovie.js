@@ -1,40 +1,78 @@
 import { useParams } from "react-router-dom";
-import { FormInput } from "./MoviesForm.js";
-import {useState} from 'react';
+import {useEffect, useState,useContext} from 'react';
 import {BackButton} from "../BackButton.js";
-import Button from '@mui/material/Button';
+import {FormComponent} from './Form.js';
+import {moviesContext} from '../App';
+import {API} from './APIInfo.js'
 
-function EditMovie({labels}){
-        const {id}=useParams();
-       const [movie,addMovieInfo]=useState({name:"",poster:"",summary:"",rating:"",cast:"",trailer:""});
-        const [message,addMessage]=useState("");
-        const getMovie=()=>{fetch(`https://61988dae164fa60017c230ed.mockapi.io/movies/${id}`)
-        .then((res)=>res.json())
-        .then((data)=>{console.log(data);addMovieInfo(data);})
-        .catch((error)=>console.log(error))};
-        const inputChange=(event)=>{addMovieInfo({...movie,[event.target.name]:event.target.value})};
-        const submitHandler=(event)=>{event.preventDefault();
-                                     fetch(`https://61988dae164fa60017c230ed.mockapi.io/movies/${id}`,{
-                                       method:'PUT',
-                                       headers:{
-                                         'Content-type':'application/json'
-                                       },
-                                       body:JSON.stringify(movie)
-                                     })
-                                      .then(()=>{
-                                          addMovieInfo({name:"",poster:"",summary:"",rating:"",cast:"",trailer:""});
-                                          addMessage("Movie edited!!");
-                                        })
-                                        .catch((error)=>console.log(error));
-                                      };
-        getMovie();
-        return (<div>
-          <form className="form-style" onSubmit={submitHandler}>
-            {labels.map((value,index)=><FormInput key={index} labelname={value} changeFn={inputChange} value={movie}/>)}
-            <Button variant="contained" className="button-style" type="Submit">+Update Movie</Button>
-          </form><br/>
-          {message} <br/>
-          <BackButton />
-        </div>); 
+function EditMovie(){
+  const {id}=useParams();
+  localStorage.setItem('movieID',id);
+  const [movie, setMovie] = useState(null);
+useEffect(()=>{
+  const ID=localStorage.getItem('movieID');
+  const getMovie = () => {
+    fetch(`${API}/movies/${ID}`)
+      .then((response) => response.json())
+      .then((res) => {
+        setMovie(res);
+      })
+      .catch((error) => console.log(error));
+  };
+  getMovie();
+},[]);
+     return (<div>{movie?<UpdateMovie movie={movie}/>:<h2>Loading...</h2>}</div>)  
+}
+function UpdateMovie({movie}){
+  const {_id,name,poster,summary,rating,cast,language,trailer}=movie;
+  const [message,addMessage]=useState("");
+  const {getMovies}=useContext(moviesContext);
+  const initialValues= {
+    name:name,
+    poster:poster,
+    summary:summary,
+    rating:rating,
+    cast:cast,
+    language:language,
+    trailer:trailer
+  };
+  const submitHandler=(values)=>{
+                        const editedMovie={
+                                           name:values.name,
+                                           poster:values.poster,
+                                           summary:values.summary,
+                                           rating:values.rating,
+                                           cast:values.cast,
+                                           language:values.language,
+                                           trailer:values.trailer 
+                                         };
+                               fetch(`${API}/movies/${_id}`,{
+                                 method:'PUT',
+                                 headers:{
+                                   'Content-type':'application/json'
+                                 },
+                                 body:JSON.stringify(editedMovie)
+                               })
+                                .then(()=>{
+                                  values.name=""
+                                  values.poster=""
+                                  values.summary=""
+                                  values.rating=""  
+                                  values.cast=""
+                                  values.language=""
+                                  values.trailer=""
+                                  addMessage("Movie edited!!");
+                                  getMovies();
+                                  })
+                                  .catch((error)=>console.log(error));
+                                };
+  return (<div>
+    <FormComponent initialValues={initialValues} action="EDIT" submitHandler={submitHandler}/>
+    <p className="message-style">{message}</p>
+    <div>
+    <BackButton/>
+    </div>  
+    </div>); 
+
 }
 export {EditMovie};
