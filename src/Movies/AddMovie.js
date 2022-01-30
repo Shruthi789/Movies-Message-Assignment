@@ -32,7 +32,7 @@ function AddMovie(){
         'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA',
         'content-type':'application/json'
       },
-      body:JSON.stringify(newMovie)
+      body:JSON.stringify([newMovie])
     })
     .then(()=>{
         getMovies();
