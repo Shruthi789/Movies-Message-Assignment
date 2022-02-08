@@ -11,9 +11,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 import { useHistory } from 'react-router';
-import {moviesContext} from '../App.js';
-import {FilterForm} from './Form.js';
-import {API} from './APIInfo.js'
+import {moviesContext} from './Home.js';
+import {FilterForm} from '../Form.js';
+import {API} from '../APIInfo.js'
 //import '../App.css';
 /*Movies Component*/
 function Movies({ name, poster, summary, rating, cast,language,editButton,deleteButton,trailerButton }) {
@@ -63,7 +63,8 @@ function Counter() {
   /*Displaying the Movie components */
   function MoviesList() {
     const history=useHistory();
-    const {movies,getMovies}=useContext(moviesContext);
+    const {movies,getMovies,setMovies}=useContext(moviesContext);
+    const [message,setMessage]=useState("");
     const deleteAction=(id)=>{
     fetch(`${API}/movies/${id}`,{method:'DELETE'})
     .then(()=>getMovies())
@@ -71,14 +72,24 @@ function Counter() {
     };
     const submitHandler=(values)=>{
        const {language,rating}=values;
-      fetch(`${API}/movies?language=${language}&rating=${rating}`,{
+       let submit_URL=`${API}/movies`;
+       if(language && rating){
+          submit_URL+=`?language=${language}&rating=${rating}`;
+       }
+       else if(rating){
+         submit_URL+=`?rating=${rating}`;
+       }
+       else if(language){
+         submit_URL+=`?language=${language}`;
+       }
+      fetch(`${submit_URL}`,{
         method:'GET',
         headers:{
        'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA'
     }})
           .then((res)=>res.json())
-         .then((values)=>console.log(values))
-         .catch((error)=>console.log(error));
+         .then((values)=>{setMovies(values);setMessage("")})
+         .catch(()=>{setMessage("Movie(s) not found")});
     };
     return (
     <div>
@@ -86,6 +97,7 @@ function Counter() {
     <div>
     <h1 className="heading">Movie List</h1>
     <FilterForm submitHandler={submitHandler}/>
+    {message.length===0?
     <div className="movies-arrangement">
       {movies.map(({
         name,
@@ -95,8 +107,8 @@ function Counter() {
         cast,
         language,
         _id
-      },index) => <Movies key={index} name={name} poster={poster} summary={summary} rating={rating} language={language} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(_id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {history.push(`/movies/edit/${_id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${_id}`)}}><InfoIcon/></IconButton>}/>)}
-    </div>
+      }) => <Movies key={_id} name={name} poster={poster} summary={summary} rating={rating} language={language} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(_id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {history.push(`/movies/edit/${_id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${_id}`)}}><InfoIcon/></IconButton>}/>)}
+    </div>:<h4>{message}</h4>}
     </div>:<h2>Loading...</h2>}
     </div>);
   } 

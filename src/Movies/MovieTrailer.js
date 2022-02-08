@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import { useParams} from "react-router-dom";
 import {BackButton} from "../BackButton.js";
-import {API} from './APIInfo.js'
+import {API} from '../APIInfo.js'
 
 function MovieTrailer(){
     const {id}=useParams();

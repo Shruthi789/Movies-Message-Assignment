@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import {useEffect, useState,useContext} from 'react';
 import {BackButton} from "../BackButton.js";
-import {FormComponent} from './Form.js';
-import {moviesContext} from '../App';
-import {API} from './APIInfo.js'
+import {FormComponent} from '../Form.js';
+import {moviesContext} from './Home.js';
+import {API} from '../APIInfo.js'
 
 function EditMovie(){
   const {id}=useParams();

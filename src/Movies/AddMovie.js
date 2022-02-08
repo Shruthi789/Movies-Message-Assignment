@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import {moviesContext} from '../App.js';
-import {FormComponent} from './Form.js';
-import {API} from './APIInfo.js'
+import {moviesContext} from './Home.js';
+import {FormComponent} from '../Form.js';
+import {API} from '../APIInfo.js'
 
 function AddMovie(){
     const {getMovies}=useContext(moviesContext);
@@ -36,7 +36,7 @@ function AddMovie(){
     })
     .then(()=>{
         getMovies();
-        history.push('/movies');
+        history.push('/movies/home');
     })
     .catch((error)=>console.log(error));
     }
