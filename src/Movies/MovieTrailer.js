@@ -10,7 +10,7 @@ function MovieTrailer(){
 useEffect(()=>{
   const ID=localStorage.getItem('movieID');
   const getMovie = () => {
-    fetch(`${API}/movies/${ID}`)
+    fetch(`${API}/movies/${ID}`,{method:'GET',headers:{'x-auth-token':localStorage.getItem('token'),'role':localStorage.getItem('type')}})
       .then((response) => response.json())
       .then((res) => {
         setMovie(res);

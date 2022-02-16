@@ -139,7 +139,10 @@ function FormComponent({initialValues,submitHandler,action}){
 function FilterForm({submitHandler}){
   const [languages,setLanguages]=useState([]);
   const getLanguages=()=>{
-    fetch(`${API}/movies/languages`)
+    fetch(`${API}/movies/languages`,{method:'GET',headers:{
+      'x-auth-token':localStorage.getItem('token'),
+     'role':localStorage.getItem('type')
+   }})
     .then((res)=>res.json())
     .then((data)=>setLanguages(data))
     .catch((error)=>console.log(error));
@@ -207,7 +210,7 @@ function LoginForm({submitHandler}){
     
   const formValidationSchema=yup.object({
       username:yup.string().max(10,'Character limit is 10').required('Enter a username!!'),
-      password:yup.string().matches('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$','Invalid credentials').required('Enter a password!'),
+      password:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Enter a password!'),
     });
     const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
       initialValues: {
@@ -263,8 +266,7 @@ function SignUpForm({submitHandler}){
     
   const formValidationSchema=yup.object({
       username:yup.string().max(10,'Character limit is 10').required('Enter a username!!'),
-      password:yup.string().matches('!/^(?=*[0-9](?=.*[a-z])(?=.*[A-Z])(?=.*+[@!#%&]).{8,}$/g','Invalid credentials').required('Enter a password!'),
-      usertype:yup.string().required('Enter a user type!!')
+      password:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Enter a password!')
     });
     const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
       initialValues: {
@@ -314,7 +316,7 @@ function SignUpForm({submitHandler}){
     select
     id="usertype"
     name="usertype"
-    label="usertype"
+    label="User Type"
     value={values.usertype}
     onChange={handleChange}
     onBlur={handleBlur}

@@ -12,7 +12,7 @@ function EditMovie(){
 useEffect(()=>{
   const ID=localStorage.getItem('movieID');
   const getMovie = () => {
-    fetch(`${API}/movies/${ID}`)
+    fetch(`${API}/movies/${ID}`,{method:'GET',headers:{'x-auth-token':localStorage.getItem('token'),'role':localStorage.getItem('type')}})
       .then((response) => response.json())
       .then((res) => {
         setMovie(res);
@@ -49,7 +49,8 @@ function UpdateMovie({movie}){
                                fetch(`${API}/movies/${_id}`,{
                                  method:'PUT',
                                  headers:{
-                                   'Content-type':'application/json'
+                                   'x-auth-token':localStorage.getItem('token'),
+                                   'content-type':'application/json'
                                  },
                                  body:JSON.stringify(editedMovie)
                                })
@@ -64,7 +65,7 @@ function UpdateMovie({movie}){
                                   addMessage("Movie edited!!");
                                   getMovies();
                                   })
-                                  .catch((error)=>console.log(error));
+                                  .catch((error)=>{console.log(error);addMessage("Error!!");});
                                 };
   return (<div>
     <FormComponent initialValues={initialValues} action="EDIT" submitHandler={submitHandler}/>

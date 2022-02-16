@@ -44,8 +44,11 @@ function Movies({ name, poster, summary, rating, cast,language,editButton,delete
       </CardContent>
       <CardActions className="card-actions">
       <Counter />
-      {editButton}
+      {localStorage.getItem('type')==='Admin'?
+      <span>{editButton}
       {deleteButton}
+      </span>
+      :""}
       </CardActions>
     </Card>
   );
@@ -62,11 +65,11 @@ function Counter() {
 
   /*Displaying the Movie components */
   function MoviesList() {
-    const history=useHistory();
-    const {movies,getMovies,setMovies}=useContext(moviesContext);
+   const history=useHistory();
+    const {movies,getMovies,setMovies,url}=useContext(moviesContext);
     const [message,setMessage]=useState("");
     const deleteAction=(id)=>{
-    fetch(`${API}/movies/${id}`,{method:'DELETE'})
+    fetch(`${API}/movies/${id}`,{method:'DELETE',headers:{'x-auth-token':localStorage.getItem('token')}})
     .then(()=>getMovies())
     .catch((error)=>console.log(error));
     };
@@ -85,8 +88,10 @@ function Counter() {
       fetch(`${submit_URL}`,{
         method:'GET',
         headers:{
-       'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA'
-    }})
+       'x-auth-token':localStorage.getItem('token'),
+      'role':localStorage.getItem('type')
+    },
+    })
           .then((res)=>res.json())
          .then((values)=>{setMovies(values);setMessage("")})
          .catch(()=>{setMessage("Movie(s) not found")});
@@ -107,7 +112,7 @@ function Counter() {
         cast,
         language,
         _id
-      }) => <Movies key={_id} name={name} poster={poster} summary={summary} rating={rating} language={language} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(_id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {history.push(`/movies/edit/${_id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`/movie-trailers/${_id}`)}}><InfoIcon/></IconButton>}/>)}
+      }) => <Movies key={_id} name={name} poster={poster} summary={summary} rating={rating} language={language} cast={cast} deleteButton={ <IconButton aria-label="deleteIcon" size="small" color="error" onClick={() => {deleteAction(_id)}}><DeleteIcon/></IconButton>} editButton={<IconButton aria-label="editIcon" size="small" color="primary" onClick={() => {history.push(`${url}/edit/${_id}`)}}><EditIcon/></IconButton>} trailerButton={<IconButton aria-label="infoIcon" size="small" color="primary" onClick={() =>{history.push(`${url}/movie-trailers/${_id}`)}}><InfoIcon/></IconButton>}/>)}
     </div>:<h4>{message}</h4>}
     </div>:<h2>Loading...</h2>}
     </div>);

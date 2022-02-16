@@ -17,7 +17,7 @@ function Login(){
             body:JSON.stringify(values)
         })
         .then((res)=>res.json())
-        .then(({message,token})=>{console.log(message,token); history.push('/movies/home');})
+        .then(({msg,token,type})=>{console.log(msg,token,type); localStorage.setItem('token',token); localStorage.setItem('type',type); history.push('/movies');})
         .catch((error)=>{console.log(error);values.username="";values.password="";setMessage("Invalid Credentials"); });
     };
     return( <div>

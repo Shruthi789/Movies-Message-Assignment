@@ -5,7 +5,7 @@ import {FormComponent} from '../Form.js';
 import {API} from '../APIInfo.js'
 
 function AddMovie(){
-    const {getMovies}=useContext(moviesContext);
+    const {getMovies,url}=useContext(moviesContext);
     const history=useHistory();
     const initialValues={
       name:'',
@@ -29,14 +29,14 @@ function AddMovie(){
     fetch(`${API}/movies`,{
       method:'POST',
       headers:{
-        'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA',
+        'x-auth-token':localStorage.getItem('token'),
         'content-type':'application/json'
       },
       body:JSON.stringify([newMovie])
     })
     .then(()=>{
         getMovies();
-        history.push('/movies/home');
+        history.push(`${url}`);
     })
     .catch((error)=>console.log(error));
     }

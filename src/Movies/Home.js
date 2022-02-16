@@ -1,4 +1,4 @@
-import { Switch,Route,Redirect,useHistory } from "react-router-dom";
+import { Route,Switch,useHistory,useRouteMatch } from "react-router-dom";
 import { useState,createContext,useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,9 +14,10 @@ import {EditMovie} from './EditMovie.js';
 import {AddMovie} from './AddMovie.js';
 import {MovieTrailer} from './MovieTrailer.js';
 import {WrongURL} from '../WrongURL.js';
+import Paper from '@mui/material/Paper';
 
 export const moviesContext= createContext({});
- 
+
 
 function Home() {
   const [mode,setMode]=useState('light');
@@ -25,7 +26,8 @@ function Home() {
       fetch(`${API}/movies`,{
         method:'GET',
            headers:{
-       'x-auth-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZjU1ODFmNmM2YWJmYzBjNmI5NmY4OCIsImlhdCI6MTY0MzQ2OTI5M30.f60i4OFqYtX0zwQYXFRFLGUTYtn2tezkFemuiLeFeVA'
+       'x-auth-token':localStorage.getItem('token'),
+       'role':localStorage.getItem('type')
     }
    })
       .then((res)=>res.json())
@@ -33,7 +35,8 @@ function Home() {
       .catch((error)=>console.log(error));
    };
   useEffect(getMovies,[]);
-  const obj={movies,getMovies,setMovies};
+  const {path,url} = useRouteMatch();
+  const obj={movies,getMovies,setMovies,url};
   const history=useHistory();
   const theme = createTheme({
     palette: {
@@ -41,50 +44,52 @@ function Home() {
     },
   });
   const brightnessChange=()=>{const value=mode==='light'?'dark':'light'; setMode(value);};
-  
+  const paperStyle={borderRadius:"0px",
+  minHeight:"100vh"};
   return (
     <ThemeProvider theme={theme}>
+      <Paper elevation={4} style={paperStyle}>
      <moviesContext.Provider value={obj}>
     <div>
        <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
         <div className="navBar">
-        <Button color="inherit"  onClick={()=>{history.push('/movies/home')}} variant="text">Movies List</Button>
-        <Button color="inherit"  onClick={()=>{history.push('/movies/add')}} variant="text">Add Movies</Button>
+        <Button color="inherit"  onClick={()=>{history.push(`${url}`)}} variant="text">Movies List</Button>
+        {localStorage.getItem('type')==='Admin'?<Button color="inherit"  onClick={()=>{history.push(`${url}/add`)}} variant="text">Add Movies</Button>:" "}
         <IconButton aria-label="brightnessToggle" color="inherit" onClick={brightnessChange}>
          {(mode==='light')?<Brightness4Icon />:<Brightness5Icon />}
         </IconButton>
+        <Button color="inherit"  onClick={()=>{history.push('/')}} variant="text">Log Out</Button>
         </div>
         </Toolbar>
       </AppBar>
     </Box>
     <Switch>
-        <Route exact path="/movies/home">
-           <MoviesList/>
+    <Route exact path={path}>
+        <MoviesList/>
+      </Route>
+      <Route path={`${path}/add`}>
+          <AddMovie/>
         </Route>
-        <Route exact path="/films/home">
-          <Redirect to="/movies/home"/>
+        <Route path={`${path}/edit/:id`}>
+          <EditMovie/>
         </Route>
-        <Route path="/movies/add"><AddMovie/></Route>
-       <Route exact path="/films/add">
-          <Redirect to="/movies/add"/>
+        <Route path={`${path}/movie-trailers/:id`}>
+          <MovieTrailer/>
         </Route>
-        <Route path="/movie-trailers/:id">
-       <MovieTrailer/>
+        <Route path={`${path}/**`}>
+          <WrongURL/>
         </Route>
-        <Route path="/movies/edit/:id">
-       <EditMovie/>
-        </Route>
-       <Route path="**">
-       <WrongURL/>
-        </Route>
-       </Switch>
+    </Switch>
     </div>
     </moviesContext.Provider>
+    </Paper>
     </ThemeProvider>
   );
 }
+
+
 
 
 export {Home};
