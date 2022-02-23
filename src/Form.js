@@ -6,7 +6,7 @@ import { FormHelperText } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
-import {API} from './APIInfo.js'
+import {API} from './APIInfo.js';
 
 /*Add and Edit Form */
 
@@ -266,13 +266,15 @@ function SignUpForm({submitHandler}){
     
   const formValidationSchema=yup.object({
       username:yup.string().max(10,'Character limit is 10').required('Enter a username!!'),
-      password:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Enter a password!')
+      password:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Enter a password!'),
+      email:yup.string().matches(new RegExp('(.+)@(.+)$'),'Invalid Credentials').required('Enter an email!!')
     });
     const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
       initialValues: {
         username:'',
         password:'',
-        usertype:''
+        usertype:'',
+        email:''
       },
       validationSchema:formValidationSchema,
       onSubmit:submitHandler
@@ -292,6 +294,21 @@ function SignUpForm({submitHandler}){
     onBlur={handleBlur}
     error={errors.username && touched.username}
     helperText={touched.username?errors.username:""}
+    sx={{width:{xs:'90vw',md:331}}}
+  />
+  </div>
+  <div className="form-style">
+      <label className="label-style">Email: </label>
+      <TextField
+    id="email"
+    name="email"
+    label="Email"
+    type="email"
+    value={values.email}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    error={errors.email && touched.email}
+    helperText={touched.email?errors.email:""}
     sx={{width:{xs:'90vw',md:331}}}
   />
   </div>
@@ -325,6 +342,7 @@ function SignUpForm({submitHandler}){
     {["Admin","Regular"].map((type,index)=><MenuItem key={index} value={type}>{type}</MenuItem>)}
   </TextField>
   </div>
+  
      <Button variant="contained" type="Submit">Sign Up</Button>
 
 </form>
@@ -332,4 +350,118 @@ function SignUpForm({submitHandler}){
 </div>);
 }
 
-export {FormComponent,FilterForm,LoginForm,SignUpForm};
+/*Send OTP Form */
+function SendOTPForm({submitHandler}){
+    
+  const formValidationSchema=yup.object({
+      email:yup.string().matches(new RegExp('(.+)@(.+)$'),'Invalid Credentials').required('Enter an email!!')
+    });
+    const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
+      initialValues: {
+        email:''
+      },
+      validationSchema:formValidationSchema,
+      onSubmit:submitHandler
+    })
+  return (<div>
+      <h2 className="heading-style">SEND E-MAIL</h2>
+      <div className='adjust-form'>
+      <form onSubmit={handleSubmit} className="form-style">
+  <div className="form-style">
+      <label className="label-style">Email: </label>
+      <TextField
+    id="email"
+    name="email"
+    label="Email"
+    type="email"
+    value={values.email}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    error={errors.email && touched.email}
+    helperText={touched.email?errors.email:""}
+    sx={{width:{xs:'90vw',md:331}}}
+  />
+  </div>
+  
+  <Button variant="contained" type="Submit">Send Mail</Button>
+
+</form>
+</div> 
+</div>);
+}
+
+function ChangePassword({submitHandler,setChange}){
+    
+  const formValidationSchema=yup.object({
+       otpCode:yup.number().required('Enter an OTP Code!!'),
+       password:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Enter a password!'),
+       confirmPassword:yup.string().matches(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})','g'),'Invalid credentials').required('Please confirm the password!')
+    });
+    const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
+      initialValues: {
+        otpCode:'',
+        password:'',
+        confirmPassword:''
+      },
+      validationSchema:formValidationSchema,
+      onSubmit:submitHandler
+    })
+  return (<div>
+      <h2 className="heading-style">CHANGE PASSWORD</h2>
+      <div className='adjust-form'>
+      <form onSubmit={handleSubmit} className="form-style">
+  <div className="form-style">
+      <label className="label-style">OTP: </label>
+      <TextField
+    id="otpCode"
+    name="otpCode"
+    label="OTP"
+    value={values.otpCode}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    error={errors.otpCode && touched.otpCode}
+    helperText={touched.otpCode?errors.otpCode:""}
+    sx={{width:{xs:'90vw',md:331}}}
+  />
+
+  </div>
+  <div className="form-style">
+      <label className="label-style">Password: </label>
+      <TextField
+    id="password"
+    name="password"
+    label="Confirm Password"
+    value={values.password}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    type="password"
+    error={errors.password && touched.password}
+    helperText={touched.password?errors.password:""}
+    sx={{width:{xs:'90vw',md:331}}}
+  />
+
+  </div>
+  <div className="form-style">
+      <label className="label-style">Confirm Password: </label>
+      <TextField
+    id="confirmPassword"
+    name="confirmPassword"
+    label="Confirm Password"
+    value={values.confirmPassword}
+    onChange={handleChange}
+    onBlur={handleBlur}
+    type="password"
+    error={errors.confirmPassword && touched.confirmPassword}
+    helperText={touched.confirmPassword?errors.confirmPassword:""}
+    sx={{width:{xs:'90vw',md:331}}}
+  />
+
+  </div>
+  <Button variant="contained" type="Submit">Change Password</Button>
+
+</form>
+</div> 
+</div>);
+}
+
+export {FormComponent,FilterForm,LoginForm,SignUpForm,SendOTPForm,ChangePassword};

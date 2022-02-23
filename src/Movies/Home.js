@@ -55,6 +55,7 @@ function Home() {
       <AppBar position="static">
         <Toolbar>
         <div className="navBar">
+         <h4>Hi, {localStorage.getItem('name')}!</h4>
         <Button color="inherit"  onClick={()=>{history.push(`${url}`)}} variant="text">Movies List</Button>
         {localStorage.getItem('type')==='Admin'?<Button color="inherit"  onClick={()=>{history.push(`${url}/add`)}} variant="text">Add Movies</Button>:" "}
         <IconButton aria-label="brightnessToggle" color="inherit" onClick={brightnessChange}>
