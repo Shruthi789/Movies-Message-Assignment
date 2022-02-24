@@ -7,7 +7,8 @@ import Rating from '@mui/material/Rating';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
 import {API} from './APIInfo.js';
-
+import {BackButton} from './BackButton.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 /*Add and Edit Form */
 
 function FormComponent({initialValues,submitHandler,action}){
@@ -351,10 +352,10 @@ function SignUpForm({submitHandler}){
 }
 
 /*Send OTP Form */
-function SendOTPForm({submitHandler}){
+function SendOTPForm({submitHandler,message}){
     
   const formValidationSchema=yup.object({
-      email:yup.string().matches(new RegExp('(.+)@(.+)$'),'Invalid Credentials').required('Enter an email!!')
+      email:yup.string().matches(new RegExp('(.+)@(.+)$'),'Invalid Email').required('Enter an email!!')
     });
     const {values,errors,touched,handleSubmit,handleBlur,handleChange}=useFormik({
       initialValues: {
@@ -384,13 +385,14 @@ function SendOTPForm({submitHandler}){
   </div>
   
   <Button variant="contained" type="Submit">Send Mail</Button>
-
+  <BackButton/>
+  {message}
 </form>
 </div> 
 </div>);
 }
 
-function ChangePassword({submitHandler,setChange}){
+function ChangePassword({submitHandler,message,setShowPChange,setOMessage}){
     
   const formValidationSchema=yup.object({
        otpCode:yup.number().required('Enter an OTP Code!!'),
@@ -430,7 +432,7 @@ function ChangePassword({submitHandler,setChange}){
       <TextField
     id="password"
     name="password"
-    label="Confirm Password"
+    label="Password"
     value={values.password}
     onChange={handleChange}
     onBlur={handleBlur}
@@ -455,10 +457,14 @@ function ChangePassword({submitHandler,setChange}){
     helperText={touched.confirmPassword?errors.confirmPassword:""}
     sx={{width:{xs:'90vw',md:331}}}
   />
-
+  
   </div>
+  <Button variant="contained" color="primary" startIcon={<ArrowBackIosIcon />} onClick={()=>{setShowPChange(false);setOMessage("");}}>
+         Back
+      </Button>
   <Button variant="contained" type="Submit">Change Password</Button>
-
+  
+   {message}
 </form>
 </div> 
 </div>);

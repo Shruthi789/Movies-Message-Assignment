@@ -2,8 +2,10 @@ import {BackButton} from '../BackButton.js';
 import {SignUpForm} from '../Form.js'
 import {API} from '../APIInfo.js';
 import {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 function SignUp(){
     const [message,setMessage]=useState("");
+    const history=useHistory();
     const submitHandler=(values)=>{
         fetch(`${API}/users/signup`,{
             method:'POST',
@@ -13,8 +15,8 @@ function SignUp(){
             body:JSON.stringify(values)
         })
         .then((res)=>res.json())
-        .then((value)=>{console.log(value);values.username="";values.password=""; values.usertype="";setMessage('Sign Up Successful! Revert to the login page and login');})
-        .catch((error)=>{console.log(error);values.username="";values.password=""; values.usertype="";setMessage("Invalid Credentials"); });
+        .then((value)=>{if(value.msg==='Success!!'){history.push('/');}else{setMessage(value.msg)}})
+        .catch((error)=>{console.log(error); });
     };
     return(<div>
           <SignUpForm submitHandler={submitHandler}/>
