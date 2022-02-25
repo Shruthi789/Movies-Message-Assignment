@@ -129,7 +129,7 @@ function FormComponent({initialValues,submitHandler,action}){
       sx={{width:{xs:'90vw',md:331}}}
     />
     </div>
-       <Button variant="contained" type="Submit">+{action} User</Button>
+       <Button variant="contained" type="Submit">+{action} Movie</Button>
 
 </form>
 </div> 
